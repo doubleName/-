@@ -1,9 +1,11 @@
-var canvas, ctx, tx, ty, cvs, cxs, cmax;
 
+var canvas, ctx, tx, ty, cvs, cxs, cmax;
 (function () {
     var a, b, oya;
     a = Object.getOwnPropertyNames(Math);
+
     for (b = 0; b < a.length; b++)window[a[b]] = Math[a[b]];
+
     oya = cretag("span");
     cvs = [];
     cxs = [];
@@ -47,10 +49,11 @@ function aaa() {
         if (!g) a = v;
         if (g == cmax - 1) a = 1 - v;
         b = (1 - (g + v) / cmax) * 90;
+
         ctx.fillStyle = "hsla(222,60%," + b + "%," + a + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.globalCompositeOperation = "destination-out";
-        s = pow(32, (g + v) / (cmax - 1)) * 0.2;
+        s = pow(32, (g + v) / (cmax - 1) * 0.2);
         ctx.fillStyle = "#000";
 
         s *= 1.6;
@@ -85,7 +88,7 @@ function aaa() {
             dae(b, ty + c[4] * s * 20, 20 * s * c[0], c[3], c[1]);
             x = b;
             for (d = 0; d < 2; d++) {
-                x -= wid;
+                x += wid;
                 if (x < -300) break;
                 dae(x, ty + c[4] * s * 20, 20 * s * c[0], c[3], c[1]);
             }
@@ -101,6 +104,7 @@ function aaa() {
             ctx.fillStyle = "hsl(222,60%," + (100) + "%)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
+
     }
 
     function ran() {
@@ -112,6 +116,7 @@ function aaa() {
         return a;
     }
     requestAnimationFrame(aaa);
+
 }
 
 function dae(x, y, han, w, r) {
