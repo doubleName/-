@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+ <html>
+   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">   
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" >
+   
+    <title>It's Wind's Blog</title>
+   
+    </head>
+    <body>
+    <div id='app'></div>
+    <script src="node_modules/vue/dist/vue.js"></script>
+    <script src="node_modules/vue-router/dist/vue-router.js"></script>
+    <script>
+    var Home = {
+        template:`
+            <div>
+            <router-link :to="{name:'comDesc',params:{name:'sign'}}">登录</router-link>
+            <router-link :to="{name:'comDesc',params:{name:'join'}}">注册</router-link>
+            <router-view></router-view>
+            </div>
+        `
+    };
+    var comDesc = {
+        data(){
+            return{
+                msg:''
+            }
+        },
+        template:`
+            <div>{{msg}}</div>
+        `,
+        watch:{
+            '$route'(to,from){
+                this.msg = to.params.name;
+            }
+        }
+    };
+    var Title = {
+        data(){
+            return{
+                name:'狗蛋',
+                pwd:'123'
+            }
+        },
+        template:`
+            <div>
+                登录
+                <input type='text' v-model='name'/>
+                <input type='text' v-model='pwd'/>
+                <input type='button' value='登录' @click='login' />
+            </div>
+        `,
+        methods:{
+            login(){
+                //新建本地数据，并新建user,
+                //localStorage.setItem(key,value)
+                localStorage.setItem('user',{name:this.name,pwd:this.pwd})
+            }
+        }
+    };
+    var App = {
+        template:`
+        <div>
+            <router-link to='/home'>首页</router-link>
+            <router-link to='/title'>标题</router-link>
+            <router-view></router-view>
+        </div>
+        `
+    };
+    var router = new VueRouter({
+        routes:[
+            {
+                path:'/home',
+                component:Home,
+                children:[
+                    {
+                        path:'/home/:name',
+                        name:'comDesc',
+                        component:comDesc
+                    }
+                ],
+                meta:{
+                    auth: true
+                }
+            },
+            {
+                path:'/title',
+                component:Title
+            }
+        ]
+    });
+    router.beforeEach((to,from,next)=>{
+        if(to.meta.auth){
+            if(localStorage.getItem('user')){
+                console.log(localStorage.getItem('user').valueOf)
+                next()
+            }else{
+                next({
+                    path:'/title'
+                })
+            }
+        }else{
+            next()
+        }
+       
+    });
+    var vm = new Vue({
+        el:'#app',
+        components:{
+            App
+        },
+        router,
+        template:`
+            <App />        
+        `
+    });
+    </script>
+    </body>
+ </html>
